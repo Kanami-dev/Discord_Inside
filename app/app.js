@@ -23,5 +23,5 @@ client.once('ready', ()=>{
 		}
 		response.sendStatus(200);
 	});
-	app.listen(3000, () => console.log('감시-on!'));
+	app.listen(3000, () => console.log('Started'));
 });

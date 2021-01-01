@@ -32,6 +32,9 @@ function updatePresence(tab) {
   $.ajax(settings);
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 var lastCheckedTabId;
 var wasFocused;
@@ -56,3 +59,7 @@ chrome.windows.getLastFocused({populate: true}, function (window) { // get the l
   }
 });
 }, 1000); // check every second
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  updatePresence(tab);
+}); 
