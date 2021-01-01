@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "author": "Kanami#2021",
+  "background": {
+    "scripts": ["vendor/jquery/jquery-3.2.1.min.js", "js/background.js"],
+    "persistent": true
+  },
+
+  "name": "Discord Inside",
+  "short_name": "Diside",
+  "description": "당신의 갤질을 만천하에 까발려보세요.",
+  "manifest_version": 2,
+
+  "browser_action": {},
+
+  "permissions": [
+    "http://localhost/*",
+    "contextMenus",
+    "storage",
+    "webRequest",
+    "*://*.dcinside.com/*",
+    "*://*.dcinside.co.kr/*",
+    "tabs"
+  ],
+
+  "icons": {
+    "16": "icons/16x16.png",
+    "32": "icons/32x32.png",
+    "48": "icons/48x48.png",
+    "128": "icons/128x128.png"
+  }
+
+}
