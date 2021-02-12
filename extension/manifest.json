@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0",
   "author": "Kanami#2021",
   "background": {
     "scripts": ["vendor/jquery/jquery-3.2.1.min.js", "js/background.js"],
@@ -29,5 +29,4 @@
     "48": "icons/48x48.png",
     "128": "icons/128x128.png"
   }
-
 }
