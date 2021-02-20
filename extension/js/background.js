@@ -15,7 +15,7 @@ function updatePresence(tab) {
   var settings = {
     "async": true,
     "crossDomain": true,
-    "url": "http://localhost:3000/",
+    "url": "http://localhost:27328/",
     "method": "POST",
     "headers": {
       "content-type": "application/json"
