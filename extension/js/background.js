@@ -1,13 +1,17 @@
-function updatePresence(tab) {
+function updatePresence(tab = false) {
   var re = RegExp("(http|https):\/\/(.*).dcinside.(co.kr|com)\/.*");
-  if (tab && re.test(tab.url)) {
-    var data = {
-      action: "set",
-      details: String(tab.title).split(' - ').reverse()[0],
-      state: tab.title
-    };
+  var data;
+
+  if (tab) {
+    if (re.test(tab.url)) {
+      data = {
+        action: "set",
+        title: tab.title,
+        url: String(tab.url)
+      };
+    }
   } else {
-    var data = {
+    data = {
       action: 'clear'
     }
   }
@@ -32,8 +36,10 @@ function sleep(ms) {
 }
 
 var Last;
-setInterval(function () { // on an interval…
-  chrome.windows.getLastFocused({populate: true}, function (window) { // get the last focused window
+var LastWindow;
+var LastTab;
+setInterval(function () {
+  chrome.windows.getLastFocused({populate: true}, function (window) {
     if (window.focused) {
       if (window.tabs)
         for (let tab of window.tabs)
@@ -44,6 +50,20 @@ setInterval(function () { // on an interval…
               break;
             }
           }
+    }
+  });
+
+  chrome.tabs.onRemoved.addListener(function(tabid) {
+    if(tabid != LastTab) {
+      updatePresence();
+      LastTab = tabid;
+    }
+  });
+   
+   chrome.windows.onRemoved.addListener(function(windowid) {
+    if(windowid != LastWindow) {
+      updatePresence();
+      LastWindow = windowid;
     }
   });
 }, 1000);
