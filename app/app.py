@@ -1,17 +1,37 @@
 import json
 import time
 import requests
+import webbrowser
 
 from json.decoder import JSONDecodeError
 from pypresence import Presence
 from flask import Flask, request
 from urllib.parse import unquote
+from tkinter import messagebox
+from github import Github
+from tkinter import Tk
+
 
 client_id = '794449494585638922'
+version = '4.0'
 
 rpc = Presence(client_id)
 app = Flask(__name__)
 
+
+root = Tk()
+root.withdraw()
+
+
+def update_check():
+	git = Github()
+	repo = git.get_repo('Kanami-dev/Diside').get_latest_release()
+	if version != repo.tag_name:
+		isUpdate = messagebox.askokcancel("Diside Server Update", "업데이트가 있습니다.\n업데이트 하시겠습니까?")
+		if isUpdate:
+			webbrowser.open('https://github.com/Kanami-dev/Diside/releases/latest')
+		exit()
+		
 
 def dccon_name(dccon_id: int):
     Cookie = {'X-Requested-With': 'XMLHttpRequest'}
@@ -168,5 +188,6 @@ def index():
 	return ''
 
 
+update_check()
 rpc.connect()
 app.run('localhost', 27328, False)
