@@ -34,60 +34,6 @@ def dcurl(title, url):
 		except ValueError:
 			pass
 
-	#[디시 메인]===========
-	if url.startswith('https://www.dcinside.com'):
-		details = '디시인사이드'
-		state = '메인'
-
-	#[디시 갤러리]===========
-	if url.startswith('https://gall.dcinside.com'):
-		details = '디시인사이드'
-		state = '갤러리'
-		if url.startswith('https://gall.dcinside.com/board/lists'):
-			details = title
-			if url.endswith('&exception_mode=recommend'):
-				state = '개념글'
-			elif url.endswith('&exception_mode=notice'):
-				state = '공지'
-			else:
-				state = '전체글'
-
-	#[디시 마이너 갤러리]===========
-	if url.startswith('https://gall.dcinside.com/m'):
-		details = '디시인사이드'
-		state = '마이너 갤러리'
-	if url.startswith('https://gall.dcinside.com/mgallery/board/lists'):
-		details = title[:-3] + '마이너 갤러리'
-		if url.endswith('&exception_mode=recommend'):
-			state = '개념글'
-		elif url.endswith('&exception_mode=notice'):
-			state = '공지'
-		else:
-			state = '전체글'
-
-	#[디시 미니 갤러리]===========
-	if url.startswith('https://gall.dcinside.com/n'):
-		details = '디시인사이드'
-		state = '미니 갤러리'
-	if url.startswith('https://gall.dcinside.com/mini/board/lists'):
-		details = title[:-3] + '미니 갤러리'
-		if url.endswith('&exception_mode=recommend'):
-			state = '개념글'
-		elif url.endswith('&exception_mode=notice'):
-			state = '공지'
-		else:
-			state = '전체글'
-
-	#[디시 게시글]===========
-	gall = title.split(' - ')[-1]
-	if url.startswith('https://gall.dcinside.com/board/view'):
-		details = gall
-	elif url.startswith('https://gall.dcinside.com/mgallery/board/view'):
-		details = gall[:-3] + '마이너 갤러리'
-	elif url.startswith('https://gall.dcinside.com/mini/board/view'):
-		details = gall[:-3] + '미니 갤러리'
-	state = title.replace(gall, '')
-
 	#[디시 이벤트]===========
 	if url.startswith('https://event.dcinside.com'):
 		details = '디시인사이드'
@@ -141,6 +87,62 @@ def dcurl(title, url):
 		details = '디시위키'
 		state = unquote(url.replace('https://wiki.dcinside.com/wiki/', '')).split('#.')[0]
 
+	#[디시 메인]===========
+	if url.startswith('https://www.dcinside.com'):
+		details = '디시인사이드'
+		state = '메인'
+
+	#[디시 갤러리]===========
+	if url.startswith('https://gall.dcinside.com'):
+		details = '디시인사이드'
+		state = '갤러리'
+		if url.startswith('https://gall.dcinside.com/board/lists'):
+			details = title
+			if url.endswith('&exception_mode=recommend'):
+				state = '개념글'
+			elif url.endswith('&exception_mode=notice'):
+				state = '공지'
+			else:
+				state = '전체글'
+
+	#[디시 마이너 갤러리]===========
+	if url.startswith('https://gall.dcinside.com/m'):
+		details = '디시인사이드'
+		state = '마이너 갤러리'
+	if url.startswith('https://gall.dcinside.com/mgallery/board/lists'):
+		details = title[:-3] + '마이너 갤러리'
+		if url.endswith('&exception_mode=recommend'):
+			state = '개념글'
+		elif url.endswith('&exception_mode=notice'):
+			state = '공지'
+		else:
+			state = '전체글'
+
+	#[디시 미니 갤러리]===========
+	if url.startswith('https://gall.dcinside.com/n'):
+		details = '디시인사이드'
+		state = '미니 갤러리'
+	if url.startswith('https://gall.dcinside.com/mini/board/lists'):
+		details = title[:-3] + '미니 갤러리'
+		if url.endswith('&exception_mode=recommend'):
+			state = '개념글'
+		elif url.endswith('&exception_mode=notice'):
+			state = '공지'
+		else:
+			state = '전체글'
+
+	#[디시 게시글]===========
+	gall = title.split(' - ')[-1]
+	if url.startswith('https://gall.dcinside.com/board/view'):
+		details = gall
+		state = title.replace(gall, '')[:-3]
+	elif url.startswith('https://gall.dcinside.com/mgallery/board/view'):
+		details = gall[:-3] + '마이너 갤러리'
+		state = title.replace(gall, '')[:-3]
+	elif url.startswith('https://gall.dcinside.com/mini/board/view'):
+		details = gall[:-3] + '미니 갤러리'
+		state = title.replace(gall, '')[:-3]
+
 	return details, state
 
 
@@ -154,13 +156,12 @@ def index():
 
 	if body['action'] == 'set':
 		details, state = dcurl(body['title'], body['url'])
-
-
 		rpc.update(
-			state = state[:128],
-			details = details[:128],
+			state = state[:128].strip(),
+			details = details[:128].strip(),
 			start = time.time(),
-			large_image = 'dclogo'
+			large_image = 'dclogo',
+			buttons = [{"label": "바로가기", "url": body['url']}]
 			)
 	else:
 		rpc.clear()
